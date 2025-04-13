@@ -1,0 +1,10 @@
+__pycache__/
+*.csv
+*.ipynb
+notebooks/
+dataset/
+venv/
+.venv/
+*.zip
+*.gz
+.git
