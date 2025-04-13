@@ -172,3 +172,14 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Data files
+data/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Dataset artifacts
+dataset/
+data/biokg/
+drug_drug_edges.csvgi
