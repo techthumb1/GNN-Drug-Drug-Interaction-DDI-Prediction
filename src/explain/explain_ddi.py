@@ -1,53 +1,42 @@
-import sys, os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 import torch
-from torch_geometric.explain import GNNExplainer
-import torch_geometric
-from src.models.rgcn_model import RGCN
-from src.data.load_biokg import load_biokg_as_hetero
+import torch.nn.functional as F
+from src.utils.sage_loader import load_sage_and_homograph
 
-# Load model and graph
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-graph = load_biokg_as_hetero().to(device)
-metadata = graph.metadata()
-num_nodes_dict = {k: v.num_nodes for k, v in graph.node_items()}
+def run_explainer(model, graph, drug1_id, drug2_id, top_k=5):
+    with torch.no_grad():
+        embeddings = model(graph.x, graph.edge_index)
 
-model = RGCN(
-    metadata=metadata,
-    num_nodes_dict=num_nodes_dict,
-    hidden_channels=64,
-    out_channels=2,
-    num_layers=2
-).to(device)
+    drug1_vec = embeddings[drug1_id]
+    drug2_vec = embeddings[drug2_id]
 
-checkpoint = torch.load("model_checkpoint.pt", map_location=device)
-model.load_state_dict(checkpoint["model_state_dict"])
-model.eval()
+    drug1_sim = F.cosine_similarity(drug1_vec.unsqueeze(0), embeddings, dim=1)
+    drug2_sim = F.cosine_similarity(drug2_vec.unsqueeze(0), embeddings, dim=1)
 
-# Select a specific prediction to explain
-target_drug1 = 101
-target_drug2 = 202
+    top_drug1 = torch.topk(drug1_sim, top_k + 1)
+    top_drug2 = torch.topk(drug2_sim, top_k + 1)
 
-# Flatten edge indices and edge types
-flat_edge_index, flat_edge_type = torch_geometric.utils.to_undirected(
-    graph.edge_index_dict, graph.edge_type_dict
-)
+    # Remove self-match (if any) and pair with scores
+    drug1_neighbors = [
+        (idx.item(), round(score.item(), 4))
+        for idx, score in zip(top_drug1.indices, top_drug1.values)
+        if idx.item() != drug1_id
+    ][:top_k]
 
-# Run forward pass
-out = model(graph.x_dict, flat_edge_index, flat_edge_type)
-pred = torch.sigmoid((out[target_drug1] * out[target_drug2]).sum()).item()
-print(f"Prediction: {pred:.4f}")
+    drug2_neighbors = [
+        (idx.item(), round(score.item(), 4))
+        for idx, score in zip(top_drug2.indices, top_drug2.values)
+        if idx.item() != drug2_id
+    ][:top_k]
 
-# Use GNNExplainer
-explainer = GNNExplainer(model, epochs=100, return_type='log_prob')
+    interaction_score = torch.sigmoid((drug1_vec * drug2_vec).sum()).item()
 
-# NOTE: We treat the drug as the center node
-explanation = explainer.explain_node(
-    node_idx=target_drug1,
-    x=graph.x_dict,
-    edge_index=flat_edge_index,
-    edge_type=flat_edge_type
-)
+    return {
+        "prediction_score": round(interaction_score, 4),
+        "top_neighbors_drug1": drug1_neighbors,
+        "top_neighbors_drug2": drug2_neighbors
+    }
 
-print("Important edges:", explanation.edge_mask)
+if __name__ == "__main__":
+    model, graph = load_sage_and_homograph()
+    result = run_explainer(model, graph, drug1_id=25, drug2_id=88)
+    print(result)
