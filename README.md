@@ -1,5 +1,10 @@
 # GNN-Drug-Drug-Interaction-DDI-Prediction
 
+<p align="center">
+  <img src="public/kgnn-ddi.png" alt="App Cover Image" width="300"/>
+</p>
+
+
 This repository contains a production-ready web application for predicting drug-drug interactions (DDIs) using Graph Neural Networks (GNNs), enhanced with interactive graph explanations. The platform is designed for researchers, data scientists, and healthcare practitioners to explore predicted interactions and understand the reasoning behind them.
 
 ---
