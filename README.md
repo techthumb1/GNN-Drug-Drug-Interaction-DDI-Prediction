@@ -1,95 +1,126 @@
 # GNN-Drug-Drug-Interaction-DDI-Prediction
 
-The GNN-Drug-Drug-Interaction-DDI-Prediction repository contains code and data for predicting drug-drug interactions (DDIs) using graph neural networks (GNNs). The project is developed for the purpose of advancing research in drug discovery and safety by leveraging machine learning techniques.
+This repository contains a production-ready web application for predicting drug-drug interactions (DDIs) using Graph Neural Networks (GNNs), enhanced with interactive graph explanations. The platform is designed for researchers, data scientists, and healthcare practitioners to explore predicted interactions and understand the reasoning behind them.
+
+---
 
 ## Table of Contents
 
-- [GNN-Drug-Drug-Interaction-DDI-Prediction](#gnn-drug-drug-interaction-ddi-prediction)
-  - [Table of Contents](#table-of-contents)
-  - [Introduction](#introduction)
-  - [Installation](#installation)
-  - [Usage](#usage)
-  - [Data](#data)
-  - [Results](#results)
-  - [License](#license)
-  - [Contributing](#contributing)
-  - [Acknowledgments](#acknowledgments)
-  - [Contact](#contact)
-  - [References](#references)
+- [Introduction](#introduction)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Web Application](#web-application)
+- [Data](#data)
+- [Model](#model)
+- [Results](#results)
+- [Sources](#sources)
+- [Next Steps / TODOs](#next-steps--todos)
+- [License](#license)
+
+---
 
 ## Introduction
 
-Drug-drug interactions (DDIs) can lead to adverse drug reactions, making it crucial to predict potential interactions between drugs. This project utilizes graph neural networks (GNNs) to model the relationships between drugs and predict DDIs.
-The GNN architecture is designed to capture the complex interactions between drugs based on their chemical structures and known interactions.
+Drug-drug interactions can lead to severe side effects or reduced efficacy in treatment. Predicting such interactions in advance is critical in drug development and personalized medicine.
+
+This project uses graph-based representations of biomedical entities and models their relationships using GNNs to accurately predict interactions. It further visualizes these predictions using explainability techniques like PGExplainer and D3.js.
+
+---
+
+## Features
+
+- GraphSAGE-based DDI prediction with trained embeddings
+- Interactive web interface built with Flask and D3.js
+- Dynamic prediction and graph-based explanation
+- Node filtering by type (Drug, Protein, Side Effect, etc.)
+- Node highlighting, tooltips, and clickable details with links to DrugBank
+- End-to-end prediction logging to CSV
+
+---
 
 ## Installation
 
-To install the required dependencies, you can use pip. Make sure you have Python 3.6 or higher installed.
+Clone the repository and install dependencies:
 
 ```bash
+git clone https://github.com/<your-username>/GNN-Drug-Drug-Interaction-DDI-Prediction
+cd GNN-Drug-Drug-Interaction-DDI-Prediction
 pip install -r requirements.txt
 ```
 
 ## Usage
 
-To run the DDI prediction model, you can use the following command:
-
 ```bash
-python main.py --config config.yaml
+python run.py
 ```
 
-This will load the configuration from `config.yaml` and execute the training and evaluation process.
-You can modify the configuration file to adjust hyperparameters, model architecture, and other settings.
+Access the web interface in your browser at:
+```
+http://localhost:5050
+```
+
+## Web Application
+
+The web application is built using Flask and D3.js. It allows users to input drug names and visualize the predicted interactions in a graph format. The graph is interactive, allowing users to filter nodes by type and view detailed information about each node.
+
+### Features of the Web Application
+
+- Home Page - Inpute two drug IDs and predict interaction probability.
+- Graph Explanation – View influential neighbors and edge importance.
+- Download Log – Export prediction history.
 
 ## Data
 
-The dataset used for training and evaluation is available in the `data` directory. The data is organized into training, validation, and test sets.
-The dataset contains information about drug pairs and their interaction labels (interacting or non-interacting).
-The data format is as follows:
+The application uses the `ogbl-biokg` dataset from Open Graph Benchmark (OGB), processed into heterogeneous graph format.
 
-- `train.csv`: Training set containing drug pairs and their interaction labels.
-- `val.csv`: Validation set containing drug pairs and their interaction labels.
-- `test.csv`: Test set containing drug pairs and their interaction labels.
-- `drug_features.csv`: Drug features used for GNN input.
-- `interaction_graph.pkl`: Preprocessed interaction graph used for GNN training.
-- `drug_graph.pkl`: Preprocessed drug graph used for GNN training.
-- `drug_graph_1.pkl`: Preprocessed drug graph used for GNN training.
-- `drug_graph_2.pkl`: Preprocessed drug graph used for GNN training.
-- `drug_graph_3.pkl`: Preprocessed drug graph used for GNN training.
-- `drug_graph_4.pkl`: Preprocessed drug graph used for GNN training.
+  Graph converted using `to_homogeneous()` for PGExplainer, while training is done with original heterogeneous BioKG graph.
 
-## Sources
+## Model
 
-- [Drug Bank] [https://www.drugbank.ca/]
-- [BioKG] [https://biokg.org/]
-- [Hetionet] [https://www.hetio.net/]
-- [ChEMBL] [https://www.ebi.ac.uk/chembl/]
-- [PubChem] [https://pubchem.ncbi.nlm.nih.gov/]
-- [STITCH] [http://stitch.embl.de/]
-- [BindingDB] [https://www.bindingdb.org/bind/index.jsp]
-- [DrugCentral] [https://drugcentral.org/]
-- [Drug Interaction Database] [https://www.druginteractiondatabase.com/]
-- [Drug Interaction Checker] [https://www.druginteractionchecker.com/]
+We use a custom GraphSAGE architecture to embed drug/protein entities.
+
+- `embedding_dim = 128`
+- 2-layer GraphSAGE
+- Trained using edge classification over flattened edge types
+- Embeddings are used for prediction:
+
+  `score = sigmoid( dot(emb1, emb2) )`
 
 ## Results
 
-The results of the DDI prediction model are saved in the `results` directory. The evaluation metrics include accuracy, precision, recall, and F1-score.
-The results are saved in a CSV file format for easy analysis.
-The results are also visualized using various plots to show the performance of the model on the validation and test sets.
-The results include:
+Basic prediction results include:
 
-- Accuracy: The overall accuracy of the model on the test set.
-- Precision: The precision of the model on the test set.
-- Recall: The recall of the model on the test set.
-- F1-score: The F1-score of the model on the test set.
-- ROC-AUC: The ROC-AUC score of the model on the test set.
-- PR-AUC: The PR-AUC score of the model on the test set.
-- Confusion Matrix: The confusion matrix of the model on the test set.
-- Classification Report: The classification report of the model on the test set.
-- Training Loss: The training loss of the model during training.
-- Validation Loss: The validation loss of the model during training.
-- Training Accuracy: The training accuracy of the model during training.
-- Validation Accuracy: The validation accuracy of the model during training.
+- Predicted interaction probability
+- Most similar neighbors via cosine similarity
+- Graph explanation with edge weights
+- Logging via predictions_log.csv
+
+Future Evaluation Metrics (WIP)
+
+- Accuracy, ROC-AUC, PR-AUC
+- Precision, Recall, F1-score
+- Explanation faithfulness evaluation
+
+## Sources
+
+- BioKG
+- OGB-L BioKG Dataset
+- DrugBank
+- PubChem
+- Hetionet
+
+## Next Steps / TODOs
+
+- ◽️Incorporate SHAP or GNNExplainer for advanced local explanations.
+- ◽️Add confidence intervals or calibration on prediction scores.
+- ◽️Support additional datasets (e.g., DrugCentral, STITCH).
+- ◽️Integrate DrugBank API using user-licensed data.
+- ◽️Refactor model.py for GraphSAGE and R-GCN dual support.
+- ◽️Add Docker and deployment instructions.
+- ◽️Add unit tests and GitHub CI workflow.
+- ◽️Improve responsive design and D3 performance.
 
 ## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+This project is licensed under the MIT License.
