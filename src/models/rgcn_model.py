@@ -26,4 +26,4 @@ class RGCN(torch.nn.Module):
         x = torch.cat([self.embeddings[key](x_dict[key]) for key in x_dict], dim=0)
         for conv in self.convs:
             x = conv(x, edge_index, edge_type)
-        return x[:, 1]
+        return x

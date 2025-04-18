@@ -93,15 +93,26 @@
   <p><a href="/batch">Batch Prediction Upload</a></p>
 
   {% if prediction_result %}
+  <!--
   <a href="/explain?drug1_id={{ prediction_result.drug1_id }}&drug2_id={{ prediction_result.drug2_id }}&relation_type={{ prediction_result.relation }}" target="_blank">
     Explain this prediction
   </a>
-  <p><a href="/download_log">📄 Download all predictions</a></p>
+  -->
+  <p><a href="/download_log">Download all predictions</a></p>
 
   {% endif %}
+
 </body>
-<h3>Graph Explanation</h3>
-<div id="graph"></div>
+{% if prediction_result %}
+  <h3>Graph Explanation</h3>
+  <div style="margin-top: 8px;">
+    <a href="/graph?drug1_id={{ prediction_result.drug1_id }}&drug2_id={{ prediction_result.drug2_id }}" target="_blank">
+      View Full Graph Explanation
+    </a>
+  </div>
+{% endif %}
+
+
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script>

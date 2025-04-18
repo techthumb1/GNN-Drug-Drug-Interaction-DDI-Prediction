@@ -2,7 +2,7 @@ from flask import request, render_template, send_file
 import pandas as pd
 import torch
 import io
-from src.utils.model import model, graph, flat_edge_index, flat_edge_type, rel_type_to_id
+from src.utils.model import model, graph, rel_type_to_id
 
 def register_batch(app):
     @app.route("/batch", methods=["GET", "POST"])
