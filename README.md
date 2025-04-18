@@ -1,12 +1,12 @@
-# GNN-Drug-Drug-Interaction-DDI-Prediction
+# KGNN-Drug-Drug-Interaction-DDI-Prediction
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/techthumb1/GNN-Drug-Drug-Interaction-DDI-Prediction/main/public/kgnn-ddi.png" alt="App Cover Image" width="300"/>
+  <img src="https://raw.githubusercontent.com/techthumb1/KGNN-Drug-Drug-Interaction-DDI-Prediction/main/public/kgnn-ddi.png" alt="App Cover Image" width="300"/>
 </p>
 
 
 
-This repository contains a production-ready web application for predicting drug-drug interactions (DDIs) using Graph Neural Networks (GNNs), enhanced with interactive graph explanations. The platform is designed for researchers, data scientists, and healthcare practitioners to explore predicted interactions and understand the reasoning behind them.
+This repository contains a production-ready web application for predicting drug-drug interactions (DDIs) using Graph Neural Networks (KGNNs), enhanced with interactive graph explanations. The platform is designed for researchers, data scientists, and healthcare practitioners to explore predicted interactions and understand the reasoning behind them.
 
 ---
 
@@ -30,7 +30,7 @@ This repository contains a production-ready web application for predicting drug-
 
 Drug-drug interactions can lead to severe side effects or reduced efficacy in treatment. Predicting such interactions in advance is critical in drug development and personalized medicine.
 
-This project uses graph-based representations of biomedical entities and models their relationships using GNNs to accurately predict interactions. It further visualizes these predictions using explainability techniques like PGExplainer and D3.js.
+This project uses graph-based representations of biomedical entities and models their relationships using KGNNs to accurately predict interactions. It further visualizes these predictions using explainability techniques like PGExplainer and D3.js.
 
 ---
 
@@ -50,8 +50,8 @@ This project uses graph-based representations of biomedical entities and models 
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/<your-username>/GNN-Drug-Drug-Interaction-DDI-Prediction
-cd GNN-Drug-Drug-Interaction-DDI-Prediction
+git clone https://github.com/<your-username>/KGNN-Drug-Drug-Interaction-DDI-Prediction
+cd KGNN-Drug-Drug-Interaction-DDI-Prediction
 pip install -r requirements.txt
 ```
 
@@ -118,7 +118,7 @@ Future Evaluation Metrics (WIP)
 
 ## Next Steps / TODOs
 
-- ◽️Incorporate SHAP or GNNExplainer for advanced local explanations.
+- ◽️Incorporate SHAP or KGNNExplainer for advanced local explanations.
 - ◽️Add confidence intervals or calibration on prediction scores.
 - ◽️Support additional datasets (e.g., DrugCentral, STITCH).
 - ◽️Integrate DrugBank API using user-licensed data.
