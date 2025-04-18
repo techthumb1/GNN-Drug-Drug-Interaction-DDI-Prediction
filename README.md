@@ -6,7 +6,7 @@
 
 
 
-This repository contains a production-ready web application for predicting drug-drug interactions (DDIs) using Graph Neural Networks (KGNNs), enhanced with interactive graph explanations. The platform is designed for researchers, data scientists, and healthcare practitioners to explore predicted interactions and understand the reasoning behind them.
+This repository contains a production-ready web application for predicting drug-drug interactions (DDIs) using Knowledge Graph Neural Networks (KGNNs), enhanced with interactive graph explanations. The platform is designed for researchers, data scientists, and healthcare practitioners to explore predicted interactions and understand the reasoning behind them.
 
 ---
 
