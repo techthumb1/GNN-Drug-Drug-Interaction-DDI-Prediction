@@ -61,7 +61,7 @@ def train():
     # After training completes
     torch.save({
         "model_state_dict": model.state_dict()
-    }, "model_checkpoint.pt")
+    }, "checkpoints/model_checkpoint.pt")
 
 
     print("Forward pass successful! Output shapes:")

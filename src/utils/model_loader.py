@@ -5,7 +5,7 @@ from src.data.load_biokg import load_biokg_as_hetero
 from src.models.rgcn_model import RGCN
 from src.models.graphsage_model import GraphSAGE
 
-def load_model_and_graph(checkpoint_path="model_checkpoint.pt", device=None):
+def load_model_and_graph(checkpoint_path="checkpoints/model_checkpoint.pt", device=None):
     if device is None:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 

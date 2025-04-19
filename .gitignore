@@ -186,3 +186,8 @@ drug_drug_edges.csvgi
 
 # .DS_Store files
 .DS_Store
+_pycache__
+
+# Model checkpoints
+checkpoints/
+model_checkpoint.pt

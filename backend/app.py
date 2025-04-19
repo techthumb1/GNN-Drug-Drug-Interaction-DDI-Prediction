@@ -55,7 +55,7 @@ metadata = graph.metadata()
 num_nodes_dict = {k: v.num_nodes for k, v in graph.node_items()}
 
 # Load checkpoint
-checkpoint = torch.load("model_checkpoint.pt", map_location=device)
+checkpoint = torch.load("checkpoints/model_checkpoint.pt", map_location=device)
 
 # Initialize model
 model = RGCN(
