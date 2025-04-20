@@ -1,0 +1,2 @@
+timestamp,drug1_id,drug2_id,relation_type,score
+2025-04-20T00:07:28.945570,25,154,drug-drug_hematopoietic_system_diseases,1.4125930647423957e-05

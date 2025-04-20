@@ -4,31 +4,51 @@
   <meta charset="UTF-8" />
   <title>Drug-Drug Interaction Graph Explanation</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 20px;
+      font-family: 'Inter', sans-serif;
+      margin: 0 auto;
+      padding: 30px 5vw;
+      background-color: #f9f9f9;
+      color: #333;
+      max-width: 1100px;
     }
     h1 {
       text-align: center;
+      font-size: 1.9rem;
       margin-bottom: 10px;
     }
     #instructions {
       text-align: center;
       margin-bottom: 20px;
-      color: #444;
+      font-size: 0.95rem;
+      color: #555;
     }
     #legend {
       text-align: center;
-      margin-bottom: 10px;
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+    }
+    .filter {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    select {
+      padding: 6px 12px;
+      font-size: 0.95rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
     }
     svg {
       display: block;
       margin: 0 auto;
-      width: 90%;
+      width: 100%;
       height: 800px;
+      border-radius: 8px;
+      background: #fff;
       border: 1px solid #ddd;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
     line.link {
       stroke: #999;
@@ -40,31 +60,54 @@
       cursor: pointer;
     }
     text.nodelabel {
-      font: 12px sans-serif;
+      font: 12px 'Inter', sans-serif;
       pointer-events: none;
       fill: #333;
+    }
+    #loading {
+      text-align: center;
+      font-size: 1rem;
+      margin-top: 20px;
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    .back-link a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    .back-link a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
 
   <h1>Graph Explanation of Predicted Drug Interaction</h1>
+
+  <div class="back-link">
+    <a href="/">← Back to Home</a>
+  </div>
+
   <p id="instructions">
-    This graph shows the most influential neighbors used to explain a model's prediction for a given drug-drug interaction.<br />
+    This graph shows the most influential neighbors used to explain a model's prediction for a given drug-drug interaction.<br>
     Click on a node to view more information. Use the filter below to focus on specific node types.
   </p>
 
   <div id="legend">
     <strong>Legend:</strong>
-    <span style="color: #1f77b4;">● Drug</span>&nbsp;
-    <span style="color: #2ca02c;">● Protein</span>&nbsp;
-    <span style="color: #d62728;">● Disease</span>&nbsp;
-    <span style="color: #9467bd;">● Side Effect</span>&nbsp;
-    <span style="color: #ff7f0e;">● Function</span>&nbsp;
+    <span style="color: #1f77b4;">● Drug</span>
+    <span style="color: #2ca02c;">● Protein</span>
+    <span style="color: #d62728;">● Disease</span>
+    <span style="color: #9467bd;">● Side Effect</span>
+    <span style="color: #ff7f0e;">● Function</span>
     <span style="color: #888;">● Unknown</span>
   </div>
 
-  <div class="filter" style="text-align: center; margin: 10px;">
+  <div class="filter">
     <label for="nodeFilter"><strong>Filter by Node Type:</strong></label>
     <select id="nodeFilter">
       <option value="all">All</option>
@@ -77,10 +120,7 @@
     </select>
   </div>
 
-  <div id="loading" style="text-align: center; font-size: 16px; margin-top: 20px;">
-    Loading graph...
-  </div>
-
+  <div id="loading">Loading graph...</div>
   <svg></svg>
 
   <script>
@@ -111,7 +151,7 @@
     });
 
     function renderGraph(nodes, links) {
-      svg.selectAll("*").remove();  // clear canvas
+      svg.selectAll("*").remove();
 
       const simulation = d3.forceSimulation(nodes)
         .force("link", d3.forceLink(links).id(d => d.id).distance(100))
@@ -132,7 +172,14 @@
         .attr("class", "node")
         .attr("r", 8)
         .attr("fill", d => colorMap[d.type] || colorMap["unknown"])
-        .on("click", d => alert(`Node: ${d.label} (ID: ${d.id})`))
+        .on("click", (event, d) => {
+          const tooltip = document.getElementById("tooltip");
+          tooltip.innerHTML = `<strong>${d.label}</strong><br>ID: ${d.id}<br>Type: ${d.type}`;
+          tooltip.style.left = (event.pageX + 15) + "px";
+          tooltip.style.top = (event.pageY - 30) + "px";
+          tooltip.style.display = "block";
+        })
+
         .call(drag(simulation));
 
       node.append("title").text(d => d.label);
@@ -175,29 +222,36 @@
       }
     });
 
+    window.addEventListener("click", (e) => {
+      const tooltip = document.getElementById("tooltip");
+      if (!e.target.closest("circle")) {
+        tooltip.style.display = "none";
+      }
+    });
+
+
     function drag(simulation) {
       function dragstarted(event) {
         if (!event.active) simulation.alphaTarget(0.3).restart();
         event.subject.fx = event.subject.x;
         event.subject.fy = event.subject.y;
       }
-
       function dragged(event) {
         event.subject.fx = event.x;
         event.subject.fy = event.y;
       }
-
       function dragended(event) {
         if (!event.active) simulation.alphaTarget(0);
         event.subject.fx = null;
         event.subject.fy = null;
       }
-
       return d3.drag()
         .on("start", dragstarted)
         .on("drag", dragged)
         .on("end", dragended);
     }
   </script>
+  <!-- Tooltip Modal -->
+  <div id="tooltip" style="position: absolute; background: #fff; padding: 10px 15px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); display: none; pointer-events: none; font-family: 'Inter', sans-serif; font-size: 14px;"></div>
 </body>
 </html>
