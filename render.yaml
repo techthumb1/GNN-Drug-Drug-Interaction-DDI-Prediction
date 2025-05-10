@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: kgnn-ddi-demo
+    runtime: docker
+    plan: free
+    autoDeploy: true
+    repo: https://github.com/your-username/KGNN-Drug-Drug-Interaction-DDI-Prediction
+    branch: feature/drugbank
+    dockerContext: .
+    dockerfilePath: Dockerfile
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: PORT
+        value: 5050

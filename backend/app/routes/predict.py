@@ -7,6 +7,21 @@ import os
 import csv
 from datetime import datetime
 
+# Optional DrugBank Integration
+try:
+    from src.utils.drugbank_lookup import lookup_drug_by_cid
+    DRUGBANK_ENABLED = True
+except ImportError:
+    DRUGBANK_ENABLED = False
+    lookup_drug_by_cid = lambda cid: None
+try:
+    from utils.drugbank_full_lookup import lookup_full_drug_info
+    DRUGBANK_RICH_ENABLED = True
+except ImportError:
+    DRUGBANK_RICH_ENABLED = False
+    lookup_full_drug_info = lambda cid: None
+
+
 def register_predict(app):
     @app.route("/predict", methods=["POST"])
     def predict():
@@ -77,6 +92,20 @@ def register_predict(app):
                 "relation_type": relation_str,
                 "predicted_interaction_probability": score
             }
+            # Optional DrugBank info
+            cid1 = raw_name1.replace("CID:", "").lstrip("0") if raw_name1.startswith("CID") else None
+            cid2 = raw_name2.replace("CID:", "").lstrip("0") if raw_name2.startswith("CID") else None
+            
+            drug1_info = lookup_drug_by_cid(cid1) if cid1 else None
+            drug2_info = lookup_drug_by_cid(cid2) if cid2 else None
+
+            response["drug1_info"] = drug1_info
+            response["drug2_info"] = drug2_info
+            rich_drug1_info = lookup_full_drug_info(cid1) if cid1 else None
+            rich_drug2_info = lookup_full_drug_info(cid2) if cid2 else None
+
+            response["drug1_full_info"] = rich_drug1_info
+            response["drug2_full_info"] = rich_drug2_info
 
             if request.is_json:
                 return jsonify(response)

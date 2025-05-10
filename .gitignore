@@ -191,3 +191,7 @@ _pycache__
 # Model checkpoints
 checkpoints/
 model_checkpoint.pt
+
+# DrugBank data
+backend/drugbank_data
+drugbank_data/

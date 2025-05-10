@@ -152,11 +152,67 @@
   {% endif %}
 
   <div class="link-group">
-    <a href="/batch">📂 Batch Prediction Upload</a>
+    <a href="/batch">Batch Prediction Upload</a>
     {% if prediction_result %}
-      <a href="/download_log">⬇ Download All Predictions</a>
-      <a href="/graph?drug1_id={{ prediction_result.drug1_id }}&drug2_id={{ prediction_result.drug2_id }}" target="_blank">🧠 View Full Graph Explanation</a>
+      <a href="/download_log">Download All Predictions</a>
+      <a href="/graph?drug1_id={{ prediction_result.drug1_id }}&drug2_id={{ prediction_result.drug2_id }}" target="_blank">View Full Graph Explanation</a>
     {% endif %}
+
+    {% if prediction_result %}
+    <div class="mt-4 p-4 border rounded bg-gray-50">
+      <h4 class="text-lg font-semibold mb-2">Drug Info</h4>
+      <ul class="list-disc ml-5 space-y-3">
+        <li>
+          <strong>{{ prediction_result.drug1_name }}</strong><br>
+    
+          {% if prediction_result.drug1_full_info %}
+            <span>CAS: {{ prediction_result.drug1_full_info.cas }}</span><br>
+            <span>Type: {{ prediction_result.drug1_full_info.type }}</span><br>
+            <span>Description: {{ prediction_result.drug1_full_info.description[:200] }}...</span><br>
+            <span>DrugBank ID: 
+              <a href="https://go.drugbank.com/drugs/{{ prediction_result.drug1_full_info.drugbank_id }}" target="_blank" class="text-blue-600 underline">
+                {{ prediction_result.drug1_full_info.drugbank_id }}
+              </a>
+            </span><br>
+            <span>Top Targets:</span>
+            <ul class="ml-5 list-disc">
+              {% for target in prediction_result.drug1_full_info.targets[:3] %}
+                <li>{{ target }}</li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <span class="text-gray-500 italic">No DrugBank info found for {{ prediction_result.drug1_name }}.</span>
+          {% endif %}
+        </li>
+    
+        <li class="mt-4">
+          <strong>{{ prediction_result.drug2_name }}</strong><br>
+    
+          {% if prediction_result.drug2_full_info %}
+            <span>CAS: {{ prediction_result.drug2_full_info.cas }}</span><br>
+            <span>Type: {{ prediction_result.drug2_full_info.type }}</span><br>
+            <span>Description: {{ prediction_result.drug2_full_info.description[:200] }}...</span><br>
+            <span>DrugBank ID: 
+              <a href="https://go.drugbank.com/drugs/{{ prediction_result.drug2_full_info.drugbank_id }}" target="_blank" class="text-blue-600 underline">
+                {{ prediction_result.drug2_full_info.drugbank_id }}
+              </a>
+            </span><br>
+            <span>Top Targets:</span>
+            <ul class="ml-5 list-disc">
+              {% for target in prediction_result.drug2_full_info.targets[:3] %}
+                <li>{{ target }}</li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <span class="text-gray-500 italic">No DrugBank info found for {{ prediction_result.drug2_name }}.</span>
+          {% endif %}
+        </li>
+      </ul>
+    </div>
+    
+    
+{% endif %}
+
   </div>
 
 </body>

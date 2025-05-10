@@ -28,6 +28,10 @@ This repository contains a production-ready web application for predicting drug-
 
 ## Introduction
 
+<p align="center">
+  <img src="public/kgnn-ddi-home.png" alt="Home Page" width="500"/>
+</p>
+
 Drug-drug interactions can lead to severe side effects or reduced efficacy in treatment. Predicting such interactions in advance is critical in drug development and personalized medicine.
 
 This project uses graph-based representations of biomedical entities and models their relationships using KGNNs to accurately predict interactions. It further visualizes these predictions using explainability techniques like PGExplainer and D3.js.
@@ -35,6 +39,11 @@ This project uses graph-based representations of biomedical entities and models 
 ---
 
 ## Features
+
+<p align="center">
+  <img src="public/kgnn-ddi-predict.png" alt="Predict" width="500"/>
+</p>
+
 
 - GraphSAGE-based DDI prediction with trained embeddings
 - Interactive web interface built with Flask and D3.js
@@ -55,6 +64,7 @@ cd KGNN-Drug-Drug-Interaction-DDI-Prediction
 pip install -r requirements.txt
 ```
 
+
 ## Usage
 
 ```bash
@@ -67,6 +77,11 @@ http://localhost:5050
 ```
 
 ## Web Application
+
+<p align="center">
+  <img src="public/kgnn-ddi-graph.png" alt="Explain Graph" width="500"/>
+</p>
+
 
 The web application is built using Flask and D3.js. It allows users to input drug names and visualize the predicted interactions in a graph format. The graph is interactive, allowing users to filter nodes by type and view detailed information about each node.
 
@@ -116,12 +131,21 @@ Future Evaluation Metrics (WIP)
 - PubChem
 - Hetionet
 
+## DrugBank Integration (Optional)
+
+This app supports optional DrugBank integration for enhanced drug metadata.
+Due to licensing restrictions, you must:
+
+1. "Apply for a [DrugBank academic license](https://go.drugbank.com/releases/latest)."
+2. "Download the required files (e.g., drugbank_all_drug_links.csv)."
+3. "Place them in backend/drugbank_data/ (see README)."
+4. "Restart the app to enable enriched drug info in prediction results."
+
 ## Next Steps / TODOs
 
 - ◽️Incorporate SHAP or KGNNExplainer for advanced local explanations.
 - ◽️Add confidence intervals or calibration on prediction scores.
 - ◽️Support additional datasets (e.g., DrugCentral, STITCH).
-- ◽️Integrate DrugBank API using user-licensed data.
 - ◽️Refactor model.py for GraphSAGE and R-GCN dual support.
 - ◽️Add Docker and deployment instructions.
 - ◽️Add unit tests and GitHub CI workflow.
