@@ -28,7 +28,9 @@ This repository contains a production-ready web application for predicting drug-
 
 ## Introduction
 
-![Home Page](public/kgnn-ddi-home.png)
+<p align="center">
+  <img src="public/kgnn-ddi-home.png" alt="Home Page" width="500"/>
+</p>
 
 Drug-drug interactions can lead to severe side effects or reduced efficacy in treatment. Predicting such interactions in advance is critical in drug development and personalized medicine.
 
@@ -38,7 +40,10 @@ This project uses graph-based representations of biomedical entities and models 
 
 ## Features
 
-![Predict](public/kgnn-ddi-predict.png)
+<p align="center">
+  <img src="public/kgnn-ddi-predict.png" alt="Predict" width="500"/>
+</p>
+
 
 - GraphSAGE-based DDI prediction with trained embeddings
 - Interactive web interface built with Flask and D3.js
@@ -73,7 +78,10 @@ http://localhost:5050
 
 ## Web Application
 
-![Graph](public/kgnn-ddi-graph.png)
+<p align="center">
+  <img src="public/kgnn-ddi-graph.png" alt="Explain Graph" width="500"/>
+</p>
+
 
 The web application is built using Flask and D3.js. It allows users to input drug names and visualize the predicted interactions in a graph format. The graph is interactive, allowing users to filter nodes by type and view detailed information about each node.
 
