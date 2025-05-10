@@ -22,7 +22,9 @@ from src.utils.id_resolver import resolve_pubchem_cid, resolve_umls_cui
 
 load_dotenv()
 
-mapping_dir = "dataset/ogbl_biokg/mapping"
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+mapping_dir = os.path.join(BASE_DIR, 'dataset', 'ogbl_biokg', 'mapping')
+
 entity_mappings = load_entity_mappings(mapping_dir)
 
 # Ensure src is in Python path
