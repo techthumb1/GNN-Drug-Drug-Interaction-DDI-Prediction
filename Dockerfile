@@ -34,7 +34,8 @@
     COPY . .
     
     # Add this to fix module path resolution
-    ENV PYTHONPATH=/app
+    ENV PYTHONPATH=/app:/app/src
+
 
     # Expose port
     EXPOSE 5050
