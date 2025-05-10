@@ -1,5 +1,12 @@
 import sys, os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+SRC_DIR = os.path.join(BASE_DIR, 'src')
+
+if SRC_DIR not in sys.path:
+    sys.path.insert(0, SRC_DIR)
+
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
 
 import sys
 import os
@@ -18,17 +25,11 @@ from src.data.load_biokg import load_biokg_as_hetero
 from src.explain.explain_ddi import run_explainer
 from src.utils.id_resolver import resolve_pubchem_cid, resolve_umls_cui
 
-
-
 load_dotenv()
 
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 mapping_dir = os.path.join(BASE_DIR, 'dataset', 'ogbl_biokg', 'mapping')
 
 entity_mappings = load_entity_mappings(mapping_dir)
-
-# Ensure src is in Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "fallback_key")
