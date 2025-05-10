@@ -1,7 +1,8 @@
 # syntax=docker/dockerfile:1.4
 
 # --- Stage 1: Base environment with dependencies ---
-    FROM python:3.11.12-slim AS base
+    FROM python:3.12.10-slim AS base
+
 
     ENV PYTHONDONTWRITEBYTECODE=1 \
         PYTHONUNBUFFERED=1
@@ -32,6 +33,9 @@
     # Copy rest of the application (after installing deps for better caching)
     COPY . .
     
+    # Add this to fix module path resolution
+    ENV PYTHONPATH=/app
+
     # Expose port
     EXPOSE 5050
     
