@@ -6,7 +6,7 @@ import torch
 from ogb.linkproppred import LinkPropPredDataset
 from torch_geometric.data import HeteroData
 from torch_geometric.transforms import ToUndirected
-from src.models.rgcn_model import RGCN
+from models.rgcn_model import RGCN
 
 def convert_to_heterodata(graph_dict):
     hetero = HeteroData()

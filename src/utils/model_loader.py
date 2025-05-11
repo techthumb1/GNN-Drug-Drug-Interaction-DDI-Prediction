@@ -1,9 +1,9 @@
 # src/utils/model_loader.py
 import torch
 from torch_geometric.data import HeteroData
-from src.data.load_biokg import load_biokg_as_hetero
-from src.models.rgcn_model import RGCN
-from src.models.graphsage_model import GraphSAGE
+from data.load_biokg import load_biokg_as_hetero
+from models.rgcn_model import RGCN
+from models.graphsage_model import GraphSAGE
 
 def load_model_and_graph(checkpoint_path="checkpoints/model_checkpoint.pt", device=None):
     if device is None:

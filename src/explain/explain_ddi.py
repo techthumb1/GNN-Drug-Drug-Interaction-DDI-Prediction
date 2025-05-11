@@ -1,6 +1,6 @@
 import torch
 import torch.nn.functional as F
-from src.utils.sage_loader import load_sage_and_homograph
+from utils.sage_loader import load_sage_and_homograph
 
 def run_explainer(model, graph, drug1_id, drug2_id, top_k=5):
     with torch.no_grad():

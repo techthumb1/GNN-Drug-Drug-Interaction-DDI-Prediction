@@ -1,7 +1,7 @@
 import torch
-from src.models.rgcn_model import RGCN
-from src.data.load_biokg import load_biokg_as_hetero
-from src.utils.mapping_loader import load_entity_mappings
+from models.rgcn_model import RGCN
+from data.load_biokg import load_biokg_as_hetero
+from utils.mapping_loader import load_entity_mappings
 
 # Device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

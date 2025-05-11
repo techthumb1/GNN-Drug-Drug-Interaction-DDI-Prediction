@@ -3,7 +3,7 @@ import torch
 
 def run_pgexplainer(model, graph, drug1_id, drug2_id):
     device = next(model.parameters()).device
-    from src.utils.model import flat_edge_index, flat_edge_type
+    from utils.model import flat_edge_index, flat_edge_type
 
     with torch.no_grad():
         out = model(graph.x_dict, flat_edge_index.to(device), flat_edge_type.to(device))  # ❌ Returns one emb
