@@ -9,9 +9,11 @@ sys.path.insert(0, os.path.join(BASE_DIR, "src"))
 
 load_dotenv()
 
-# Import the Flask app from backend
-from backend.app import app
+# Import using factory
+from backend.app import create_app
+
+app = create_app()
 
 if __name__ == "__main__":
-    # Bind to 0.0.0.0 and respect $PORT from Render
+    # Use Render's PORT or fallback to 5050
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5050)), debug=False)
