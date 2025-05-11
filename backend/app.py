@@ -31,7 +31,8 @@ mapping_dir = os.path.join(BASE_DIR, 'dataset', 'ogbl_biokg', 'mapping')
 
 entity_mappings = load_entity_mappings(mapping_dir)
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), "templates"))
+
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "fallback_key")
 
 # Set device
