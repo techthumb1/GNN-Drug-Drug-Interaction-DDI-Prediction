@@ -41,5 +41,5 @@
     EXPOSE 5050
     
     # Entry point
-    CMD ["python", "backend/app.py"]
+    CMD ["python", "run.py"]
     

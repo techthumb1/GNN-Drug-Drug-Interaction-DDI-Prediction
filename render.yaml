@@ -4,8 +4,8 @@ services:
     runtime: docker
     plan: free
     autoDeploy: true
-    repo: https://github.com/your-username/KGNN-Drug-Drug-Interaction-DDI-Prediction
-    branch: feature/drugbank
+    repo: https://github.com/techthumb1/KGNN-Drug-Drug-Interaction-DDI-Prediction
+    branch: main
     dockerContext: .
     dockerfilePath: Dockerfile
     envVars:
