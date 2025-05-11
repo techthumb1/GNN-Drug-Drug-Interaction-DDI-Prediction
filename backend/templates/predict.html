@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DDI Prediction Result</title>
+  <style>
+    body { font-family: Arial; max-width: 700px; margin: 50px auto; color: #222; }
+    .result-box {
+      border: 1px solid #ccc;
+      padding: 20px;
+      margin-top: 30px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+    }
+    .result-box h2 {
+      margin-bottom: 15px;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 15px;
+      text-decoration: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+    }
+    .btn.secondary {
+      background-color: #6c757d;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>DDI Prediction Result</h2>
+
+  <div class="result-box">
+    <p>
+      <strong>{{ prediction_result.drug1_name }}</strong> (ID: {{ prediction_result.drug1_id }})
+      ↔ <strong>{{ prediction_result.drug2_name }}</strong> (ID: {{ prediction_result.drug2_id }})
+    </p>
+
+    <p>Relation Type: <strong>{{ prediction_result.relation }}</strong></p>
+    <p>Predicted Probability: <strong>{{ prediction_result.prediction | round(4) }}</strong></p>
+    {% if prediction_result.drug1_full_info %}
+<div class="p-3 bg-white shadow rounded">
+  <h4>📘 Enriched Drug Info: {{ prediction_result.drug1_name }}</h4>
+  <p><strong>CAS:</strong> {{ prediction_result.drug1_full_info.cas }}</p>
+  <p><strong>Description:</strong> {{ prediction_result.drug1_full_info.description[:150] }}...</p>
+  <p><strong>Targets:</strong>
+    <ul>
+      {% for target in prediction_result.drug1_full_info.targets[:3] %}
+        <li>{{ target }}</li>
+      {% endfor %}
+    </ul>
+  </p>
+</div>
+{% endif %}
+
+    {% if prediction_result.prediction >= 0.8 %}
+      <p style="color: red;">⚠️ High likelihood of interaction — potentially significant.</p>
+    {% elif prediction_result.prediction >= 0.5 %}
+      <p style="color: orange;">⚠️ Moderate likelihood — review biological context.</p>
+    {% else %}
+      <p style="color: green;">✅ Low likelihood — weak or no interaction expected.</p>
+    {% endif %}
+  </div>
+
+  <a href="/" class="btn">← Try Another Prediction</a>
+  <a href="/download_log" class="btn secondary">📥 Download All Predictions</a>
+  <a href="/graph?drug1_id={{ prediction_result.drug1_id }}&drug2_id={{ prediction_result.drug2_id }}" class="btn secondary" target="_blank">🧠 View Explanation Graph</a>
+
+</body>
+</html>

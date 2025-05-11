@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>KGNN Drug Interaction Predictor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 0 20px;
+      color: #222;
+      background-color: #fafafa;
+    }
+    h2, h3 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    form {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-bottom: 30px;
+    }
+    input, select {
+      padding: 10px;
+      width: 100%;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    button {
+      padding: 10px 20px;
+      margin-right: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button[type="submit"] {
+      background-color: #007bff;
+      color: #fff;
+    }
+    button[type="button"] {
+      background-color: #6c757d;
+      color: #fff;
+    }
+    .result-box {
+      border: 1px solid #ccc;
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .result-box p {
+      margin: 8px 0;
+    }
+    .status-high { color: red; }
+    .status-mid { color: orange; }
+    .status-low { color: green; }
+    .link-group {
+      margin-top: 20px;
+      padding-left: 10px;
+    }
+    .link-group a {
+      display: block;
+      margin-bottom: 8px;
+      color: #007bff;
+      text-decoration: none;
+    }
+    .link-group a:hover {
+      text-decoration: underline;
+    }
+  </style>
+
+  <script>
+    async function loadRelations() {
+      const res = await fetch('/relations');
+      const data = await res.json();
+      const select = document.getElementById('relation_type');
+
+      select.innerHTML = '';
+      const defaultOpt = document.createElement('option');
+      defaultOpt.disabled = true;
+      defaultOpt.selected = true;
+      defaultOpt.textContent = 'Select Relation Type';
+      select.appendChild(defaultOpt);
+
+      data.forEach(rel => {
+        const opt = document.createElement('option');
+        opt.value = rel;
+        opt.textContent = rel;
+        select.appendChild(opt);
+      });
+    }
+    window.onload = loadRelations;
+
+    function setSample() {
+      document.querySelector('input[name="drug1_id"]').value = 58;
+      document.querySelector('input[name="drug2_id"]').value = 89;
+      document.querySelector('#relation_type').value = "drug-drug_cancer";
+    }
+  </script>
+</head>
+<body>
+
+  <h2>Drug-Drug Interaction Prediction</h2>
+
+  <form method="POST" action="/predict">
+    <label>Drug 1 ID:</label>
+    <input type="number" name="drug1_id" required />
+
+    <label>Drug 2 ID:</label>
+    <input type="number" name="drug2_id" required />
+
+    <label>Relation Type:</label>
+    <select name="relation_type" id="relation_type" required>
+      <option value="" disabled selected>Loading...</option>
+    </select>
+
+    <button type="submit">Predict</button>
+    <button type="button" onclick="setSample()">Try Sample</button>
+  </form>
+
+  {% if error %}
+  <div style="color: red; padding: 10px; border: 1px solid red; background: #ffecec; border-radius: 6px;">
+    ⚠️ {{ error }}
+  </div>
+  {% endif %}
+
+  {% if prediction_result %}
+  <div class="result-box">
+    <h3>Prediction Result:</h3>
+    <p>
+      <strong>{{ prediction_result.drug1_name }}</strong> (ID: {{ prediction_result.drug1_id }})
+      ↔ <strong>{{ prediction_result.drug2_name }}</strong> (ID: {{ prediction_result.drug2_id }})
+    </p>
+    <p>Relation type: <strong>{{ prediction_result.relation }}</strong></p>
+    <p>Predicted interaction probability: <strong>{{ prediction_result.prediction | round(4) }}</strong></p>
+
+    {% if prediction_result.prediction >= 0.8 %}
+      <p class="status-high">⚠️ High likelihood — potentially significant.</p>
+    {% elif prediction_result.prediction >= 0.5 %}
+      <p class="status-mid">⚠️ Moderate likelihood — consider context.</p>
+    {% else %}
+      <p class="status-low">✅ Low likelihood — likely weak or no interaction.</p>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <div class="link-group">
+    <a href="/batch">Batch Prediction Upload</a>
+    {% if prediction_result %}
+      <a href="/download_log">Download All Predictions</a>
+      <a href="/graph?drug1_id={{ prediction_result.drug1_id }}&drug2_id={{ prediction_result.drug2_id }}" target="_blank">View Full Graph Explanation</a>
+    {% endif %}
+
+    {% if prediction_result %}
+    <div class="mt-4 p-4 border rounded bg-gray-50">
+      <h4 class="text-lg font-semibold mb-2">Drug Info</h4>
+      <ul class="list-disc ml-5 space-y-3">
+        <li>
+          <strong>{{ prediction_result.drug1_name }}</strong><br>
+    
+          {% if prediction_result.drug1_full_info %}
+            <span>CAS: {{ prediction_result.drug1_full_info.cas }}</span><br>
+            <span>Type: {{ prediction_result.drug1_full_info.type }}</span><br>
+            <span>Description: {{ prediction_result.drug1_full_info.description[:200] }}...</span><br>
+            <span>DrugBank ID: 
+              <a href="https://go.drugbank.com/drugs/{{ prediction_result.drug1_full_info.drugbank_id }}" target="_blank" class="text-blue-600 underline">
+                {{ prediction_result.drug1_full_info.drugbank_id }}
+              </a>
+            </span><br>
+            <span>Top Targets:</span>
+            <ul class="ml-5 list-disc">
+              {% for target in prediction_result.drug1_full_info.targets[:3] %}
+                <li>{{ target }}</li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <span class="text-gray-500 italic">No DrugBank info found for {{ prediction_result.drug1_name }}.</span>
+          {% endif %}
+        </li>
+    
+        <li class="mt-4">
+          <strong>{{ prediction_result.drug2_name }}</strong><br>
+    
+          {% if prediction_result.drug2_full_info %}
+            <span>CAS: {{ prediction_result.drug2_full_info.cas }}</span><br>
+            <span>Type: {{ prediction_result.drug2_full_info.type }}</span><br>
+            <span>Description: {{ prediction_result.drug2_full_info.description[:200] }}...</span><br>
+            <span>DrugBank ID: 
+              <a href="https://go.drugbank.com/drugs/{{ prediction_result.drug2_full_info.drugbank_id }}" target="_blank" class="text-blue-600 underline">
+                {{ prediction_result.drug2_full_info.drugbank_id }}
+              </a>
+            </span><br>
+            <span>Top Targets:</span>
+            <ul class="ml-5 list-disc">
+              {% for target in prediction_result.drug2_full_info.targets[:3] %}
+                <li>{{ target }}</li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <span class="text-gray-500 italic">No DrugBank info found for {{ prediction_result.drug2_name }}.</span>
+          {% endif %}
+        </li>
+      </ul>
+    </div>
+    
+    
+{% endif %}
+
+  </div>
+
+</body>
+</html>

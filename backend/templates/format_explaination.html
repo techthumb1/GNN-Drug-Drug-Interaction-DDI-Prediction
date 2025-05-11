@@ -1,0 +1,29 @@
+def format_explanation_as_html(result, drug1_id, drug2_id):
+    pred_score = result["prediction_score"]
+    neighbors1 = result["top_neighbors_drug1"]
+    neighbors2 = result["top_neighbors_drug2"]
+
+    html = f"""
+    <div style="font-family: Arial, sans-serif;">
+      <h2>Prediction Score: <span style="color: #007acc;">{pred_score}</span></h2>
+
+      <div style="display: flex; gap: 40px;">
+        <div>
+          <h3>Top Neighbors for Drug {drug1_id}</h3>
+          <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse;">
+            <tr><th>Node ID</th><th>Similarity</th></tr>
+            {''.join(f'<tr><td>{nid}</td><td>{score}</td></tr>' for nid, score in neighbors1)}
+          </table>
+        </div>
+
+        <div>
+          <h3>Top Neighbors for Drug {drug2_id}</h3>
+          <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse;">
+            <tr><th>Node ID</th><th>Similarity</th></tr>
+            {''.join(f'<tr><td>{nid}</td><td>{score}</td></tr>' for nid, score in neighbors2)}
+          </table>
+        </div>
+      </div>
+    </div>
+    """
+    return html
