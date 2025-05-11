@@ -1,7 +1,7 @@
 import torch
-from utils.to_homogeneous_patch import to_homogeneous  # ✅ your patch
-from data.load_biokg import load_biokg_as_hetero
-from models.graphsage_model import GraphSAGE
+from src.utils.to_homogeneous_patch import to_homogeneous  # ✅ your patch
+from src.data.load_biokg import load_biokg_as_hetero
+from src.models.graphsage_model import GraphSAGE
 
 
 def load_sage_and_homograph(device="cpu"):

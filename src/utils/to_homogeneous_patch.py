@@ -1,6 +1,6 @@
 '''
 NOTE: This is a manual implementation of `to_homogeneous()` from PyG 2.6.1
-      It’s used because some builds (especially from data.pyg.org) don’t expose the function properly.
+      It’s used because some builds (especially from src.data.pyg.org) don’t expose the function properly.
       Replace with `from torch_geometric.utils import to_homogeneous` once a verified build is in use.
 
 '''
