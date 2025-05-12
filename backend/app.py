@@ -239,4 +239,4 @@ def batch():
     return render_template("batch.html")
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5050, debug=True)
+    raise RuntimeError("❌ Do not run app.py directly. Use run.py instead.")
