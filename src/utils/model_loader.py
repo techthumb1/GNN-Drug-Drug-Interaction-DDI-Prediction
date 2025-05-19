@@ -5,7 +5,7 @@ from src.data.load_biokg import load_biokg_as_hetero
 from src.models.rgcn_model import RGCN
 from src.models.graphsage_model import GraphSAGE
 
-def load_model_and_graph(checkpoint_path="checkpoints/model_checkpoint.pt", device=None):
+def load_model_and_graph(checkpoint_path="models/model_checkpoint.pt", device=None):
     if device is None:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -25,7 +25,7 @@ def load_model_and_graph(checkpoint_path="checkpoints/model_checkpoint.pt", devi
     model.load_state_dict(checkpoint["model_state_dict"], strict=False)
     model.eval()
 
-    # ✅ Use built-in method, no need to import ToHomogeneous
+    # Use built-in method, no need to import ToHomogeneous
     homo_graph = graph.to_homogeneous().to(device)
 
     return model, homo_graph

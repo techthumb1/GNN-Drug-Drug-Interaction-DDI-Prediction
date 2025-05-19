@@ -59,7 +59,7 @@ metadata = graph.metadata()
 num_nodes_dict = {k: v.num_nodes for k, v in graph.node_items()}
 
 # Load checkpoint
-checkpoint = torch.load("checkpoints/model_checkpoint.pt", map_location=device)
+checkpoint = torch.load("models/model_checkpoint.pt", map_location=device)
 
 # Initialize model
 model = RGCN(
@@ -239,4 +239,4 @@ def batch():
     return render_template("batch.html")
 
 if __name__ == "__main__":
-    raise RuntimeError("❌ Do not run app.py directly. Use run.py instead.")
+    raise RuntimeError("Do not run app.py directly. Use run.py instead.")

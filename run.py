@@ -1,19 +1,27 @@
 import os
 import sys
+from flask import Flask
 from dotenv import load_dotenv
 
-# Add backend/ and src/ to path
+# ─── Setup ────────────────────────────────────────────────────────────────────────
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(BASE_DIR, "backend"))
 sys.path.insert(0, os.path.join(BASE_DIR, "src"))
 
 load_dotenv()
 
-# Import using factory
-from backend.app import create_app
+app = Flask(
+    __name__,
+    template_folder=os.path.join(BASE_DIR, "backend", "app", "templates"),
+    static_folder=os.path.join(BASE_DIR, "backend", "app", "static")
+)
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "supersecretkey")
 
-app = create_app()
+# ─── Register routes ──────────────────────────────────────────────────────────────
+from backend.app.routes import init_routes
+init_routes(app)
 
+# ─── Launch ───────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    # Use Render's PORT or fallback to 5050
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5050)), debug=False)
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port, debug=False)

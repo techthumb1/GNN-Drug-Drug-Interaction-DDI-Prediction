@@ -1,6 +1,5 @@
 from flask import Flask
 from dotenv import load_dotenv
-from .routes import init_routes
 import os
 
 def create_app():
@@ -10,5 +9,4 @@ def create_app():
     app = Flask(__name__, template_folder=os.path.join(base_dir, "templates"))
     app.secret_key = os.getenv("FLASK_SECRET_KEY", "supersecretkey")
 
-    init_routes(app)
-    return app
+    return app  # ✅ Delay route registration to run.py

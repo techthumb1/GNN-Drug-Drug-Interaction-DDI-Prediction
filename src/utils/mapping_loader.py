@@ -9,7 +9,7 @@ def load_entity_mappings(mapping_dir):
         if not file.endswith(".csv.gz") or "entidx2name" not in file:
             continue
 
-        entity_type = file.split("_")[0]  # e.g. 'drug' from 'drug_entidx2name.csv.gz'
+        entity_type = file.split("_")[0]  
         entity_mappings[entity_type] = {}
 
         with gzip.open(os.path.join(mapping_dir, file), 'rt') as f:

@@ -3,7 +3,7 @@
 # ✅ Use the builder you already created
 BUILDER_NAME="cloud-jrob77-cloud-kgnn-ddi-builder"
 IMAGE_NAME="ddi-kg-prediction-app"
-PORT=5050
+PORT=8080
 
 echo "🔄 Using builder: $BUILDER_NAME"
 docker buildx use "$BUILDER_NAME"

@@ -1,10 +1,71 @@
+# Python cache & metadata
 __pycache__/
-*.csv
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+*.log
+
+# Jupyter notebooks
 *.ipynb
+.ipynb_checkpoints/
 notebooks/
+
+# Datasets and outputs
+*.csv
+*.tsv
+*.json
+*.xlsx
+*.npy
+*.npz
+*.pkl
+*.joblib
+data/
 dataset/
-venv/
-.venv/
+output/
+results/
+
+# Model weights
+*.pth
+# *.pt
+*.h5
+*.hdf5
+*.tar
+*.onnx
+*.xml
+*.pb
+checkpoints/
+weights/
+
+# Archives and binaries
 *.zip
 *.gz
-.git
+*.bz2
+*.tar.gz
+*.rar
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+ENV/
+
+# Git & OS junk
+.git/
+.DS_Store
+Thumbs.db
+*.bak
+
+# Project-specific folders to ignore
+# backend/models/
+backend/checkpoints/
+backend/outputs/
+backend/__pycache__/
+backend/*.log
+backend/*.pt
+backend/*.pth
+backend/logs/
+# backend/drugbank_data/
+# backend/*.csv
+backend/app/*.csv

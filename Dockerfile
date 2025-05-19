@@ -1,40 +1,31 @@
-# syntax=docker/dockerfile:1.4
-
-# --- Stage 1: Base environment with dependencies ---
-FROM python:3.12.10-slim AS base
-
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PYTHONPATH=/app:/app/src
+# Dockerfile
+FROM python:3.11.12-slim-bookworm
 
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    git \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+# System dependencies
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends build-essential curl \
+ && rm -rf /var/lib/apt/lists/*
 
-# Upgrade pip
-RUN pip install --upgrade pip
-
-# Copy only requirements for caching
+# Install Python deps
 COPY requirements.txt .
+RUN pip install --upgrade pip \
+ && pip install --no-cache-dir -r requirements.txt
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Dockerfile (add this above RUN python)
+COPY models /app/models
+COPY backend/drugbank_data /app/backend/drugbank_data
+COPY backend/app /app/backend/app
+COPY backend/config /app/backend/config
+COPY backend/templates /app/backend/templates
+COPY backend/static /app/backend/static
+COPY src/utils /app/utils 
+COPY src /app/src
+COPY run.py .
 
-# --- Stage 2: Final image with app code ---
-FROM base AS final
 
-WORKDIR /app
+EXPOSE 8080
 
-# Copy application code
-COPY . .
-
-# Expose Flask port
-EXPOSE 5050
-
-# Entry point to start the app
-CMD ["python", "run.py"]
+# Production entrypoint
+CMD ["gunicorn", "run:app", "--bind=0.0.0.0:8080", "--workers=2", "--timeout=600"]

@@ -73,7 +73,7 @@ python run.py
 
 Access the web interface in your browser at:
 ```
-http://localhost:5050
+http://localhost:8080
 ```
 
 ## Web Application

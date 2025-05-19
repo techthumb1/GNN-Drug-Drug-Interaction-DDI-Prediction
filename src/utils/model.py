@@ -33,7 +33,7 @@ model = RGCN(
 ).to(device)
 
 # Load pretrained RGCN checkpoint
-checkpoint = torch.load("model_checkpoint.pt", map_location=device)
+checkpoint = torch.load("models/model_checkpoint.pt", map_location=device)
 model.load_state_dict(checkpoint["model_state_dict"])
 model.eval()
 

@@ -1,15 +1,13 @@
 services:
   - type: web
-    name: kgnn-ddi-demo
-    runtime: docker
-    plan: free
-    autoDeploy: true
-    repo: https://github.com/techthumb1/KGNN-Drug-Drug-Interaction-DDI-Prediction
-    branch: main
-    dockerContext: .
-    dockerfilePath: Dockerfile
+    name: kgnn-ddi-app
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m gunicorn run:app --bind 0.0.0.0:$PORT
     envVars:
-      - key: FLASK_ENV
-        value: production
-      - key: PORT
-        value: 5050
+      - key: MODEL_URL
+        value: https://drive.google.com/uc?id=1gq5IBHbkcGvZiZAHz2aeR5ZjymgdgSuE
+      - key: DRUGBANK_JSON_URL
+        value: https://drive.google.com/uc?id=1fv5LBdbUsHGrIaM-_HxiVs9HXtsdpZTt
+      - key: DRUGBANK_XML_URL
+        value: https://drive.google.com/uc?id=1CClA1W7eRaydCtsYJRS5Gm1T2DZzbT6P
